@@ -1,10 +1,78 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>treeptt</title>
-  </head>
-  <body class="bg-gradient-to-br from-black via-darker to-black text-gray-300">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timur Cravtov - Software Engineer</title>
+<link rel="icon" type="image/x-icon" href="/assets/web.png">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    body { font-family: 'Inter', sans-serif; }
+    .glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgba(18, 18, 24, 0.75); }
+    .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-6px); box-shadow: 0 12px 30px -8px rgba(99, 102, 241, 0.25); }
+    .gradient-text { background: linear-gradient(90deg, #6366f1, #b99fd1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradient 6s ease infinite; background-size: 200% auto; }
+    @keyframes gradient { 0% { background-position: 0% } 50% { background-position: 100% } 100% { background-position: 0% } }
+    /* Masonry-style columns (Pinterest-like) */
+    .masonry { column-gap: 1rem; column-count: 1; }
+    @media (min-width: 768px) { .masonry { column-count: 2; column-gap: 2rem; } }
+    .masonry > section { break-inside: avoid; -webkit-column-break-inside: avoid; margin-bottom: 1.5rem; }
+    /* Header scroll behavior: header hidden initially, reveals on scroll */
+    /* Slower, smoother transitions for a gentle reveal */
+    #site-header { opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity 450ms ease-in-out, transform 450ms ease-in-out; }
+    #site-header .header-avatar { opacity: 0; transform: scale(0.92); transition: opacity 500ms ease-in-out, transform 500ms ease-in-out; }
+    #site-header .header-name, #site-header .header-role { opacity: 0; transform: translateY(-4px); transition: transform 520ms ease-in-out, opacity 520ms ease-in-out; }
+    body.scrolled #site-header { opacity: 1; transform: translateY(0); pointer-events: auto; backdrop-filter: blur(8px); }
+    /* Slight stagger so avatar and text feel a bit delayed after header appears */
+    body.scrolled #site-header .header-avatar { opacity: 1; transform: scale(1); }
+    body.scrolled #site-header .header-name, body.scrolled #site-header .header-role { opacity: 1; transform: translateY(0); transition-delay: 90ms; }
+    /* Switch header name/role from vertical stack to a single inline row when header is shown */
+    #site-header .leading-tight { display: flex; flex-direction: column; gap: 0; }
+    body.scrolled #site-header .leading-tight { flex-direction: row; gap: 0.5rem; align-items: center; }
+    /* Add a subtle separator before the role when compacted */
+    body.scrolled #site-header .header-role::before { content: '·'; margin-right: 0.35rem; color: rgba(255,255,255,0.6); font-size: 0.9em; }
+    /* Shrink/fade big profile elements when scrolled */
+    .profile-large { transition: transform 600ms ease-in-out, opacity 600ms ease-in-out; }
+    .profile-photo-large { transition: opacity 600ms ease-in-out, transform 600ms ease-in-out; }
+    body.scrolled .profile-large { transform: scale(0.8) translateY(-8px); opacity: 0.95; }
+    body.scrolled .profile-photo-large { opacity: 0; transform: scale(0.85); }
+    /* Hero visual style (distinct from cards) and hide behavior */
+    .hero {
+        /* make hero hide/appear more slowly for a smooth UX */
+        transition: opacity 700ms ease-in-out, transform 700ms ease-in-out, max-height 700ms ease-in-out, padding 700ms ease-in-out, margin 700ms ease-in-out;
+        max-height: 1000px; overflow: hidden;
+        /* stronger background to make hero stand out */
+        background: linear-gradient(120deg, rgba(99,102,241,0.12), rgba(185,159,209,0.06));
+        border: 1px solid rgba(99,102,241,0.06);
+        box-shadow: 0 18px 40px -18px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
+        padding-top: 2.5rem; padding-bottom: 2.5rem;
+    }
+    body.scrolled .hero { opacity: 0; transform: translateY(-18px); max-height: 0; padding-top: 0 !important; padding-bottom: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important; pointer-events: none; }
+
+    /* Larger profile photo & title inside hero to emphasize it (responsive) */
+    .hero .profile-photo-large { width: 9rem; height: 9rem; }
+    @media (min-width: 768px) { .hero .profile-photo-large { width: 11rem; height: 11rem; } }
+    .hero .profile-large { font-size: 1.6rem; }
+    @media (min-width: 768px) { .hero .profile-large { font-size: 2.5rem; } }
+    /* Contact line hide behavior: collapse on scroll like hero */
+    .contact-line { transition: opacity 600ms ease-in-out, transform 600ms ease-in-out, max-height 600ms ease-in-out, padding 600ms ease-in-out; max-height: 200px; overflow: hidden; }
+    body.scrolled .contact-line { opacity: 0; transform: translateY(-12px); max-height: 0; padding-top: 0 !important; padding-bottom: 0 !important; pointer-events: none; }
+
+    /* On small screens, hide header contact icons when the sticky header is shown (avoids duplicate/mobile clutter) */
+    @media (max-width: 639px) {
+        body.scrolled #site-header .header-contact-item { display: none !important; }
+    }
+    /* Disable animations during initial paint to avoid flicker.
+       Keep visual properties untouched so a stuck preload won't permanently hide content. */
+    body.preload #site-header, body.preload .hero, body.preload .contact-line, body.preload .profile-large, body.preload .profile-photo-large {
+        transition: none !important;
+    }
+</style>
+</head>
+<body class="bg-gradient-to-br from-black via-darker to-black text-gray-300 preload">
 
 <!-- Sticky header with compact name/role and contact info -->
 <header id="site-header" class="sticky top-0 z-50">
@@ -214,7 +282,7 @@
 </main>
 
 <footer class="text-center text-gray-500 mt-12 mb-6">
-    <p>© 2025 Timur Cravtov. All rights reserved.</p>
+    <p>&copy; 2025 Timur Cravtov. All rights reserved.</p>
 </footer>
 
 <script>
@@ -268,7 +336,5 @@
     }, 50);
 })();
 </script>
-
-
 </body>
 </html>
